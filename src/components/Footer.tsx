@@ -25,7 +25,6 @@ const Footer: React.FC = () => {
             <h6 className="fw-bold mb-3 text-dark small uppercase tracking-wider">Platform</h6>
             <ul className="list-unstyled">
               <li className="mb-2"><Link to="/photobooth" className="text-decoration-none text-secondary-muted small">Virtual Booth</Link></li>
-              <li className="mb-2"><Link to="/games" className="text-decoration-none text-secondary-muted small">Mini Games</Link></li>
               <li className="mb-2"><Link to="/moments" className="text-decoration-none text-secondary-muted small">Moments Feed</Link></li>
               <li className="mb-2"><Link to="/stores" className="text-decoration-none text-secondary-muted small">Store Finder</Link></li>
             </ul>

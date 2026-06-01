@@ -15,7 +15,6 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Photobooth from './pages/Photobooth';
 import Moments from './pages/Moments';
-import Games from './pages/Games';
 import Stores from './pages/Stores';
 import About from './pages/About';
 import Chat from './pages/Chat';
@@ -35,7 +34,6 @@ export default function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/photobooth" element={<Photobooth />} />
                 <Route path="/moments" element={<Moments />} />
-                <Route path="/games" element={<Games />} />
                 <Route path="/stores" element={<Stores />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/chat" element={<Chat />} />

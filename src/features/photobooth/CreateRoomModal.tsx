@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Users, Shield, Sparkles, Gamepad2, Check } from 'lucide-react';
+import { X, Users, Shield, Sparkles, Check } from 'lucide-react';
 import { Button } from '../../shared/ui/Button';
 import { GlassCard } from '../../shared/ui/GlassCard';
 import { cn } from '../../shared/utils';
@@ -22,7 +22,6 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
   const [privacy, setPrivacy] = useState<'private' | 'invite'>('private');
   const [maxMembers, setMaxMembers] = useState(4);
   const [theme, setTheme] = useState('classic');
-  const [hasMiniGame, setHasMiniGame] = useState(true);
 
   const handleCreate = () => {
     if (!name.trim() || !user) return;
@@ -31,8 +30,7 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
       name,
       privacy,
       maxMembers,
-      theme,
-      hasMiniGame
+      theme
     }, user);
 
     onClose();
@@ -149,31 +147,6 @@ export const CreateRoomModal = ({ isOpen, onClose }: CreateRoomModalProps) => {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Mini Game Toggle */}
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-purple/10 flex items-center justify-center text-brand-purple">
-                  <Gamepad2 className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900">Mini Games</p>
-                  <p className="text-[10px] text-slate-500">Bật trò chơi tương tác trong phòng</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setHasMiniGame(!hasMiniGame)}
-                className={cn(
-                  "w-12 h-6 rounded-full transition-colors relative",
-                  hasMiniGame ? "bg-brand-purple" : "bg-slate-200"
-                )}
-              >
-                <motion.div
-                  animate={{ x: hasMiniGame ? 26 : 2 }}
-                  className="absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm"
-                />
-              </button>
             </div>
 
             <div className="pt-4 flex gap-3">

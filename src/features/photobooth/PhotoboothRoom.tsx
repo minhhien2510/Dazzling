@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, MessageSquare, Gamepad2, Users, X, Send, Smile, Sparkles, Image as ImageIcon, Heart, MessageCircle, Download, Share2, Wand2 } from 'lucide-react';
+import { Camera, MessageSquare, Users, X, Send, Smile, Sparkles, Image as ImageIcon, Heart, MessageCircle, Download, Share2, Wand2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Button } from '../../shared/ui/Button';
 import { GlassCard } from '../../shared/ui/GlassCard';
@@ -25,7 +25,7 @@ export const PhotoboothRoom = () => {
   const { images, addImage, addReaction, addComment, updateImage } = useImageStore();
   const { rooms, joinRoom, activeRoom } = useRoomStore();
   
-  const [activeTab, setActiveTab] = useState<'camera' | 'chat' | 'games' | 'gallery'>('gallery');
+  const [activeTab, setActiveTab] = useState<'camera' | 'chat' | 'gallery'>('gallery');
   const [captureMode, setCaptureMode] = useState<'single' | 'multi'>('single');
   const [multiCaptures, setMultiCaptures] = useState<string[]>([]);
   const [currentFrameIndex, setCurrentFrameIndex] = useState<number>(0);
@@ -39,6 +39,8 @@ export const PhotoboothRoom = () => {
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [editingImage, setEditingImage] = useState<ImageAsset | null>(null);
+  const [autoCaptureEnabled, setAutoCaptureEnabled] = useState(true);
+  const [hiddenPreviewIndexes, setHiddenPreviewIndexes] = useState<number[]>([]);
   
   const [capturedPreview, setCapturedPreview] = useState<string | null>(null);
   const [isReviewing, setIsReviewing] = useState(false);
@@ -74,6 +76,13 @@ export const PhotoboothRoom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const previewSources = multiCaptures.length > 0 ? multiCaptures : capturedPreview ? [capturedPreview] : [];
+  const previewItems = previewSources.filter((_, index) => !hiddenPreviewIndexes.includes(index));
+
+  useEffect(() => {
+    setHiddenPreviewIndexes([]);
+  }, [multiCaptures.length, capturedPreview]);
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
@@ -95,19 +104,25 @@ export const PhotoboothRoom = () => {
       setMultiCaptures([]);
       setCurrentFrameIndex(0);
       startMultiCaptureSequence();
-    } else {
-      setCountdown(3);
-      const interval = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev === 1) {
-            clearInterval(interval);
-            capturePhoto();
-            return null;
-          }
-          return prev ? prev - 1 : null;
-        });
-      }, 1000);
+      return;
     }
+
+    if (!autoCaptureEnabled) {
+      capturePhoto();
+      return;
+    }
+
+    setCountdown(3);
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev === 1) {
+          clearInterval(interval);
+          capturePhoto();
+          return null;
+        }
+        return prev ? prev - 1 : null;
+      });
+    }, 1000);
   };
 
   const startMultiCaptureSequence = async () => {
@@ -349,35 +364,6 @@ export const PhotoboothRoom = () => {
     }
   };
 
-  const [gameScore, setGameScore] = useState(0);
-  const [isGameActive, setIsGameActive] = useState(false);
-
-  const [mvp, setMvp] = useState<{ name: string; avatar: string; score: number } | null>(null);
-
-  const startQuickClick = () => {
-    setIsGameActive(true);
-    setGameScore(0);
-    setMvp(null);
-    setTimeout(() => {
-      setIsGameActive(false);
-      const finalScore = Math.floor(Math.random() * 50) + 20; // Mock score for others
-      const isUserMvp = gameScore > finalScore;
-      
-      setMvp({
-        name: isUserMvp ? (user?.name || 'Bạn') : 'Hoàng Nam',
-        avatar: isUserMvp ? (user?.avatar || '') : mockUsers[1].avatar,
-        score: isUserMvp ? gameScore : finalScore,
-      });
-
-      addMessage({
-        id: Math.random().toString(),
-        senderId: 'system',
-        content: `Trò chơi kết thúc! MVP: ${isUserMvp ? 'Bạn' : 'Hoàng Nam'} với ${isUserMvp ? gameScore : finalScore} điểm! 🏆`,
-        type: 'system',
-        timestamp: Date.now(),
-      });
-    }, 5000);
-  };
 
   return (
     <div className="h-screen flex flex-col bg-slate-900 text-white overflow-hidden">
@@ -419,14 +405,13 @@ export const PhotoboothRoom = () => {
           <TabButton active={activeTab === 'gallery'} onClick={() => setActiveTab('gallery')} icon={<ImageIcon className="w-5 h-5" />} />
           <TabButton active={activeTab === 'camera'} onClick={() => setActiveTab('camera')} icon={<Camera className="w-5 h-5" />} />
           <TabButton active={activeTab === 'chat'} onClick={() => setActiveTab('chat')} icon={<MessageSquare className="w-5 h-5" />} />
-          <TabButton active={activeTab === 'games'} onClick={() => setActiveTab('games')} icon={<Gamepad2 className="w-5 h-5" />} />
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-screen">
         {/* Camera Area */}
         <div className={cn(
-          "flex-1 relative bg-black overflow-hidden transition-all duration-500",
+          "flex-1 relative bg-black overflow-hidden transition-all duration-500 min-h-[55vh] sm:min-h-[65vh] lg:min-h-full",
           activeTab !== 'camera' && "opacity-0 pointer-events-none absolute inset-0 z-0"
         )}>
           {uploadProgress > 0 && (
@@ -445,21 +430,59 @@ export const PhotoboothRoom = () => {
             </div>
           )}
 
-          <SingleCaptureView 
-            isLocal={true}
-            videoRef={localVideoRef}
-            selectedFilter={selectedFilter}
-            selectedFrame={selectedFrame}
-            countdown={countdown}
-            isCapturing={isCapturing}
-            capturedPreview={capturedPreview}
-            isReviewing={isReviewing}
-            onRetake={() => { setIsReviewing(false); setCapturedPreview(null); setMultiCaptures([]); }}
-            onSave={saveToGallery}
-            captureMode={captureMode}
-            multiCaptures={multiCaptures}
-            currentFrameIndex={currentFrameIndex}
-          />
+          <div className="relative z-10 flex h-full flex-col gap-4 p-4 sm:p-6 lg:flex-row lg:items-stretch">
+            <div className="flex-1 min-h-[60vh]">
+              <SingleCaptureView 
+                isLocal={true}
+                videoRef={localVideoRef}
+                selectedFilter={selectedFilter}
+                selectedFrame={selectedFrame}
+                countdown={countdown}
+                isCapturing={isCapturing}
+                capturedPreview={capturedPreview}
+                isReviewing={isReviewing}
+                onRetake={() => { setIsReviewing(false); setCapturedPreview(null); setMultiCaptures([]); }}
+                onSave={saveToGallery}
+                captureMode={captureMode}
+                multiCaptures={multiCaptures}
+                currentFrameIndex={currentFrameIndex}
+              />
+            </div>
+
+            <div className="w-full lg:w-[320px] flex-shrink-0">
+              <div className="flex h-full flex-col rounded-[32px] border border-white/10 bg-slate-950/75 p-4 shadow-2xl">
+                <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Live preview</p>
+                    <p className="text-sm font-semibold text-white">Captured frames</p>
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-slate-400">{previewItems.length}/4</span>
+                </div>
+
+                <div className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1">
+                  {previewItems.length > 0 ? (
+                    previewItems.map((src, index) => (
+                      <div key={`${src}-${index}`} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900 h-28">
+                        <img src={src} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                        <button
+                          onClick={() => setHiddenPreviewIndexes((prev) => [...prev, index])}
+                          className="absolute top-3 right-3 z-20 rounded-full bg-black/60 p-2 text-white transition hover:bg-black/80"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex h-full min-h-[180px] flex-col items-center justify-center rounded-3xl border border-dashed border-white/10 bg-slate-900/60 px-4 text-center">
+                      <p className="text-sm font-semibold text-white">Chưa có ảnh để xem</p>
+                      <p className="text-xs text-slate-400 mt-2">Chụp vài khoảnh khắc để xem bản xem trước ở đây.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Hidden Canvas for Capture */}
           <canvas ref={canvasRef} className="hidden" />
@@ -481,14 +504,14 @@ export const PhotoboothRoom = () => {
 
           {/* Main Controls */}
           {!isReviewing && (
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-8 z-50">
-              <div className="flex flex-col items-center gap-4">
-                <div className="glass rounded-2xl p-1 flex gap-1">
+            <div className="absolute bottom-6 left-1/2 z-50 flex w-full max-w-4xl -translate-x-1/2 flex-col items-center gap-4 px-4 sm:px-6">
+              <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+                <div className="glass rounded-3xl p-1 flex gap-1">
                   <button 
                     onClick={() => setCaptureMode('single')}
                     className={cn(
-                      "px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all",
-                      captureMode === 'single' ? "bg-white text-slate-900" : "text-white/60 hover:text-white"
+                      "px-4 py-2 rounded-2xl text-[11px] font-semibold transition-all",
+                      captureMode === 'single' ? "bg-white text-slate-900" : "text-white/70 hover:text-white"
                     )}
                   >
                     1 FRAME
@@ -496,54 +519,45 @@ export const PhotoboothRoom = () => {
                   <button 
                     onClick={() => setCaptureMode('multi')}
                     className={cn(
-                      "px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all",
-                      captureMode === 'multi' ? "bg-white text-slate-900" : "text-white/60 hover:text-white"
+                      "px-4 py-2 rounded-2xl text-[11px] font-semibold transition-all",
+                      captureMode === 'multi' ? "bg-white text-slate-900" : "text-white/70 hover:text-white"
                     )}
                   >
                     4 FRAMES
                   </button>
                 </div>
-                
-                <div className="flex items-center gap-8">
-                  <motion.button 
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white"
-                  >
-                    <Smile className="w-6 h-6" />
-                  </motion.button>
-                  
-                  <motion.button
-                    onClick={startCapture}
-                    disabled={countdown !== null}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="relative w-24 h-24 rounded-full bg-white p-1 shadow-[0_0_30px_rgba(255,255,255,0.3)] disabled:opacity-50"
-                  >
-                    <div className="w-full h-full rounded-full border-4 border-brand-purple flex items-center justify-center overflow-hidden">
-                      <div className="w-full h-full bg-brand-purple flex items-center justify-center">
-                        <Camera className="w-8 h-8 text-white" />
-                      </div>
-                    </div>
-                    {/* Breathing ring */}
-                    {countdown === null && (
-                      <motion.div 
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="absolute -inset-2 border-2 border-white rounded-full pointer-events-none"
-                      />
-                    )}
-                  </motion.button>
 
-                  <motion.button 
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white"
-                  >
-                    <Sparkles className="w-6 h-6" />
-                  </motion.button>
-                </div>
+                <button
+                  onClick={() => setAutoCaptureEnabled((prev) => !prev)}
+                  className={cn(
+                    "rounded-2xl border border-white/10 px-4 py-2 text-[11px] font-semibold transition",
+                    autoCaptureEnabled ? 'bg-brand-purple text-white' : 'bg-white/5 text-white/70 hover:text-white'
+                  )}
+                >
+                  {autoCaptureEnabled ? 'AUTO' : 'MANUAL'}
+                </button>
               </div>
+
+              <motion.button
+                onClick={startCapture}
+                disabled={countdown !== null}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="relative w-24 h-24 rounded-full bg-white p-1 shadow-[0_0_30px_rgba(255,255,255,0.3)] disabled:opacity-50"
+              >
+                <div className="w-full h-full rounded-full border-4 border-brand-purple flex items-center justify-center overflow-hidden">
+                  <div className="w-full h-full bg-brand-purple flex items-center justify-center">
+                    <Camera className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+                {countdown === null && (
+                  <motion.div 
+                    animate={{ scale: [1, 1.16, 1], opacity: [0.4, 0.1, 0.4] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute -inset-2 border-2 border-white rounded-full pointer-events-none"
+                  />
+                )}
+              </motion.button>
             </div>
           )}
         </div>
@@ -662,61 +676,6 @@ export const PhotoboothRoom = () => {
             </motion.div>
           )}
 
-          {activeTab === 'games' && (
-            <motion.div
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 300, opacity: 0 }}
-              className="flex-1 glass border-none rounded-none p-6 flex flex-col"
-            >
-              <h3 className="text-xl font-bold mb-6">Mini Games</h3>
-              <div className="flex-1 space-y-4">
-                <div onClick={startQuickClick} className="cursor-pointer">
-                  <GameCard 
-                    title="Bấm nhanh" 
-                    players="2-4" 
-                    icon="⚡" 
-                    active={isGameActive}
-                  />
-                </div>
-                <GameCard title="Đoán Emoji" players="2-8" icon="🤔" />
-                <GameCard title="Vẽ hình" players="2-6" icon="🎨" />
-              </div>
-
-              {mvp && !isGameActive && (
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  className="mt-4 p-4 bg-gradient-to-br from-yellow-400/20 to-brand-pink/20 rounded-3xl border border-yellow-400/30 text-center"
-                >
-                  <p className="text-[10px] font-bold text-yellow-500 uppercase tracking-widest mb-2">🏆 Session MVP</p>
-                  <div className="flex items-center justify-center gap-3">
-                    <img src={mvp.avatar} className="w-10 h-10 rounded-full border-2 border-yellow-400" referrerPolicy="no-referrer" />
-                    <div className="text-left">
-                      <p className="text-sm font-bold">{mvp.name}</p>
-                      <p className="text-xs text-slate-400">{mvp.score} điểm</p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {isGameActive && (
-                <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="mt-auto p-6 bg-brand-purple rounded-3xl text-center"
-                >
-                  <p className="text-sm mb-2">BẤM LIÊN TỤC!</p>
-                  <button 
-                    onClick={() => setGameScore(s => s + 1)}
-                    className="w-24 h-24 rounded-full bg-white text-brand-purple text-3xl font-bold shadow-xl active:scale-90 transition-transform"
-                  >
-                    {gameScore}
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
-          )}
         </AnimatePresence>
       </main>
       {/* Image Detail Modal */}
@@ -896,17 +855,3 @@ const UserCamera = ({ user, isLocal, videoRef }: { user: any; isLocal?: boolean;
   );
 };
 
-const GameCard = ({ title, players, icon, active }: { title: string; players: string; icon: string; active?: boolean }) => (
-  <div className={cn(
-    "p-4 rounded-2xl border transition-all",
-    active ? "bg-brand-purple text-white border-brand-purple" : "bg-white/5 border-white/10 hover:bg-white/10"
-  )}>
-    <div className="flex items-center gap-4">
-      <span className="text-3xl">{icon}</span>
-      <div>
-        <h4 className="font-bold">{title}</h4>
-        <p className="text-xs text-slate-400">{players} người chơi</p>
-      </div>
-    </div>
-  </div>
-);

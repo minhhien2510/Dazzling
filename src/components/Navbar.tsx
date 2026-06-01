@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button, Badge } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
-import { Camera, Gamepad2, Store, Users, LogIn, User, Sun, Moon, MessageCircle } from 'lucide-react';
+import { Camera, Store, Users, LogIn, User, Sun, Moon, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -20,9 +20,6 @@ const Navigation: React.FC = () => {
           <Nav className="mx-auto">
             <Nav.Link as={NavLink as any} to="/photobooth" className="px-3 small uppercase tracking-wide">
               Photobooth
-            </Nav.Link>
-            <Nav.Link as={NavLink as any} to="/games" className="px-3 small uppercase tracking-wide">
-              Games
             </Nav.Link>
             <Nav.Link as={NavLink as any} to="/moments" className="px-3 small uppercase tracking-wide">
               Moments

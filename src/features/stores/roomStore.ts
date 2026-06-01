@@ -7,7 +7,6 @@ export interface Room {
   privacy: 'private' | 'invite';
   maxMembers: number;
   theme: string;
-  hasMiniGame: boolean;
   members: User[];
   createdAt: number;
   lastActive: string;
@@ -31,7 +30,6 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       privacy: 'private',
       maxMembers: 5,
       theme: 'classic',
-      hasMiniGame: true,
       members: [],
       createdAt: Date.now() - 86400000,
       lastActive: '2 phút trước'
@@ -42,7 +40,6 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       privacy: 'private',
       maxMembers: 8,
       theme: 'warm',
-      hasMiniGame: false,
       members: [],
       createdAt: Date.now() - 172800000,
       lastActive: '1 giờ trước'
@@ -53,7 +50,6 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       privacy: 'invite',
       maxMembers: 10,
       theme: 'neon',
-      hasMiniGame: true,
       members: [],
       createdAt: Date.now() - 259200000,
       lastActive: 'Hôm qua'

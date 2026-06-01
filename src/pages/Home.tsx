@@ -33,9 +33,6 @@ const Home: React.FC = () => {
                   <Button as={Link as any} to="/photobooth" className="btn-dazzle btn-lg">
                     Start Booth <Zap size={18} className="ms-2 d-inline" />
                   </Button>
-                  <Button as={Link as any} to="/games" className="btn btn-outline-lavender btn-lg px-5 py-3 rounded-pill fw-bold">
-                    Explore Games
-                  </Button>
                 </div>
                 
                 <div className="mt-5 d-flex align-items-center gap-3 justify-content-center justify-content-lg-start">
@@ -163,35 +160,6 @@ const Home: React.FC = () => {
         </Container>
       </section>
 
-      {/* Mini Games Preview */}
-      <section className="py-5">
-         <Container>
-            <div className="text-center mb-5">
-                <h2 className="fw-bold h1">Social <span className="dazzle-text-gradient">Gaming</span> Hub</h2>
-                <p className="text-secondary-muted">Win exclusive frames by playing with friends.</p>
-            </div>
-            <Row className="gy-4 pt-4">
-               {Object.entries(IMAGES.games).map(([key, src], idx) => (
-                 <Col key={key} md={4}>
-                    <motion.div 
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: idx * 0.1 }}
-                      className="glass-card overflow-hidden text-center p-0 border-0 shadow-lg bg-white"
-                    >
-                       <img src={src} height="200" className="w-100 object-cover" alt="game" />
-                       <div className="p-4">
-                          <h4 className="fw-bold mb-2 text-capitalize text-dark">{key} Challenge</h4>
-                          <p className="small text-secondary-muted mb-4">Compete for the weekly leaderboard</p>
-                          <Button className="btn btn-outline-lavender rounded-pill px-4 fw-bold">Play Now</Button>
-                       </div>
-                    </motion.div>
-                 </Col>
-               ))}
-            </Row>
-         </Container>
-      </section>
 
       {/* Testimonials */}
       <section className="py-5 my-5">

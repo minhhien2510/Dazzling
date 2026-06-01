@@ -1,7 +1,6 @@
 import usersData from '../data/users.json';
 import roomsData from '../data/photoboothRooms.json';
 import momentsData from '../data/moments.json';
-import gamesData from '../data/games.json';
 import storesData from '../data/stores.json';
 import friendsData from '../data/friends.json';
 import messagesData from '../data/messages.json';
@@ -20,10 +19,6 @@ export const MockApiService = {
   getMoments: async () => {
     await delay(1000);
     return momentsData;
-  },
-  getGames: async () => {
-    await delay(700);
-    return gamesData;
   },
   getStores: async () => {
     await delay(900);

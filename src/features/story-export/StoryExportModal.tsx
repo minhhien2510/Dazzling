@@ -125,7 +125,7 @@ export const StoryExportModal: React.FC<StoryExportModalProps> = ({ image, onClo
                 Mẹo nhỏ
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Sử dụng các frame ảnh giới hạn từ Mini Games để làm cho Story của bạn trở nên độc đáo hơn!
+                Sử dụng các frame ảnh đặc sắc để làm cho Story của bạn trở nên độc đáo hơn!
               </p>
             </div>
           </GlassCard>

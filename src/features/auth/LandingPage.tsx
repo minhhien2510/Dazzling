@@ -65,7 +65,7 @@ export const LandingPage = () => {
               </span>
             </h1>
             <p className="text-xl text-slate-500 mb-10 max-w-lg leading-relaxed">
-              Dazzling mang cả trải nghiệm Photobooth Hàn Quốc về ngay chiếc điện thoại của bạn. Chụp ảnh nhóm, chơi game và kết nối không giới hạn.
+              Dazzling mang cả trải nghiệm Photobooth Hàn Quốc về ngay chiếc điện thoại của bạn. Chụp ảnh nhóm, kết nối bạn bè và tạo ra những khoảnh khắc không giới hạn.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/login">
@@ -128,7 +128,7 @@ export const LandingPage = () => {
             <div key={i} className="flex items-center gap-12 mx-12">
               <span className="text-2xl font-black text-slate-200 uppercase tracking-widest">Photobooth Online</span>
               <Sparkles className="text-brand-purple w-6 h-6" />
-              <span className="text-2xl font-black text-slate-200 uppercase tracking-widest">Mini Games</span>
+              <span className="text-2xl font-black text-slate-200 uppercase tracking-widest">Creative Booth</span>
               <Heart className="text-brand-pink w-6 h-6" />
               <span className="text-2xl font-black text-slate-200 uppercase tracking-widest">Social Connect</span>
               <Camera className="text-brand-purple w-6 h-6" />
@@ -160,8 +160,8 @@ export const LandingPage = () => {
             />
             <FeatureCard 
               icon={<Sparkles className="w-8 h-8 text-yellow-500" />}
-              title="Thử Thách Nhóm"
-              desc="Tham gia các mini game trong khi chờ đợi để nhận được các frame ảnh giới hạn."
+              title="Bộ lọc độc quyền"
+              desc="Khám phá các bộ lọc và frame đặc sắc để làm mới mọi khoảnh khắc của bạn."
               color="bg-yellow-100"
             />
           </div>
@@ -278,7 +278,7 @@ export const LandingPage = () => {
             <ul className="space-y-4 text-sm text-slate-500">
               <li><a href="#" className="hover:text-brand-purple">Tính năng</a></li>
               <li><a href="#" className="hover:text-brand-purple">Bộ lọc mới</a></li>
-              <li><a href="#" className="hover:text-brand-purple">Mini Games</a></li>
+              <li><a href="#" className="hover:text-brand-purple">Bộ lọc mới</a></li>
               <li><a href="#" className="hover:text-brand-purple">Bảng giá</a></li>
             </ul>
           </div>

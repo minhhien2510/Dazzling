@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Row, Col, Card, Button, ProgressBar, Badge } from 'react-bootstrap';
+import { Row, Col, Card, Button } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'motion/react';
 import Webcam from 'react-webcam';
 import { Camera, Zap, RefreshCw, CheckCircle } from 'lucide-react';
@@ -46,13 +46,6 @@ const CaptureStage: React.FC<CaptureStageProps> = ({ config, onComplete, onCance
     }
   }, [countdown, capturePhoto]);
 
-  const poses = [
-    "Peace Sign! ✌️",
-    "Heart Fingers! 🫶",
-    "Big Smile! 😁",
-    "Cool Pose! 😎"
-  ];
-
   return (
     <div className="h-100 pb-5">
       <Row className="gy-4 align-items-stretch">
@@ -77,23 +70,13 @@ const CaptureStage: React.FC<CaptureStageProps> = ({ config, onComplete, onCance
                 {countdown !== null && (
                   <motion.div 
                     key="countdown"
-                    initial={{ opacity: 0, scale: 2 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0 }}
-                    className="position-absolute top-50 start-50 translate-middle d-flex flex-column align-items-center"
-                    style={{ zIndex: 10 }}
+                    initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                    className="position-absolute top-0 start-0 m-4 d-flex align-items-center justify-center rounded-circle bg-black bg-opacity-70"
+                    style={{ zIndex: 10, width: '52px', height: '52px' }}
                   >
-                    <div className="glass-card p-4 rounded-circle mb-3" style={{ background: 'rgba(0,0,0,0.5)' }}>
-                       <h1 className="display-1 fw-bold text-white mb-0" style={{ width: '80px', textAlign: 'center' }}>{countdown === 0 ? '📸' : countdown}</h1>
-                    </div>
-                    <Badge bg="primary" className="fs-5 px-3 py-2 rounded-pill shadow-lg mb-3">Photo {photos.length + 1} / 4</Badge>
-                    <motion.div 
-                        initial={{ y: 20, opacity: 0 }} 
-                        animate={{ y: 0, opacity: 1 }} 
-                        className="glass-card px-4 py-2 bg-white text-dark fw-bold rounded-pill"
-                    >
-                        {poses[photos.length]}
-                    </motion.div>
+                    <span className="h4 mb-0 text-white">{countdown === 0 ? '📸' : countdown}</span>
                   </motion.div>
                 )}
                 {flash && (
@@ -107,19 +90,6 @@ const CaptureStage: React.FC<CaptureStageProps> = ({ config, onComplete, onCance
                   />
                 )}
               </AnimatePresence>
-
-              <div className="position-absolute bottom-0 start-0 w-100 p-4" style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.7))' }}>
-                  <ProgressBar 
-                    now={(photos.length / 4) * 100} 
-                    variant="primary" 
-                    className="mb-3 rounded-pill" 
-                    style={{ height: '8px', background: 'rgba(255,255,255,0.2)' }} 
-                  />
-                  <div className="d-flex justify-content-between text-white small fw-bold">
-                    <span>PROGRESS</span>
-                    <span>{photos.length} / 4 CAPTURED</span>
-                  </div>
-              </div>
             </Card>
           </motion.div>
         </Col>
