@@ -1,0 +1,26 @@
+[
+  {
+    "id": "m1",
+    "senderId": "f1",
+    "receiverId": "1",
+    "text": "Hey Alex! Check out our new group photostrip!",
+    "timestamp": "10:30 AM",
+    "type": "text"
+  },
+  {
+    "id": "m2",
+    "senderId": "1",
+    "receiverId": "f1",
+    "text": "Omg it's so cute! Love the K-Style frame.",
+    "timestamp": "10:32 AM",
+    "type": "text"
+  },
+  {
+    "id": "m3",
+    "senderId": "f1",
+    "receiverId": "1",
+    "text": "That photostrip looks amazing!",
+    "timestamp": "10:35 AM",
+    "type": "text"
+  }
+]

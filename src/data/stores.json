@@ -1,0 +1,24 @@
+[
+  {
+    "id": "s1",
+    "name": "Dazzle Store Shinjuku",
+    "style": "K-Style",
+    "address": "123 Neon St, Shinjuku, Tokyo",
+    "rating": 4.9,
+    "distance": "0.5km",
+    "image": "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=600",
+    "lat": 35.6895,
+    "lng": 139.6917
+  },
+  {
+    "id": "s2",
+    "name": "Vintage Flash Soho",
+    "style": "Vintage",
+    "address": "45 Retro Ln, Soho, London",
+    "rating": 4.7,
+    "distance": "1.2km",
+    "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600",
+    "lat": 51.5128,
+    "lng": -0.1307
+  }
+]

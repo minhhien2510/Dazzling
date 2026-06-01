@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "username": "dazzle_queen",
+    "name": "Alex Smith",
+    "email": "alex@example.com",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+    "memories": ["m1", "m2", "m3"],
+    "favoriteFrames": ["f1", "f5"]
+  },
+  {
+    "id": "2",
+    "username": "pixel_pioneer",
+    "name": "Jordan Lee",
+    "email": "jordan@example.com",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan",
+    "memories": ["m4"],
+    "favoriteFrames": ["f2"]
+  }
+]

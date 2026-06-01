@@ -1,0 +1,29 @@
+[
+  {
+    "id": "f1",
+    "name": "Luna Starlight",
+    "username": "luna_xoxo",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Luna",
+    "status": "online",
+    "lastMessage": "That photostrip looks amazing!",
+    "unreadCount": 2
+  },
+  {
+    "id": "f2",
+    "name": "Zoe Pixel",
+    "username": "zoe_games",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe",
+    "status": "offline",
+    "lastMessage": "Want to play Pose Challenge?",
+    "unreadCount": 0
+  },
+  {
+    "id": "f3",
+    "name": "Felix Neon",
+    "username": "neon_felix",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+    "status": "online",
+    "lastMessage": "See you at the Shinjuku store!",
+    "unreadCount": 0
+  }
+]

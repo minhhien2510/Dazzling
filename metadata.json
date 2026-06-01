@@ -1,0 +1,6 @@
+{
+  "name": "DAZZLING",
+  "description": "Online Photobooth & Interactive Social Experience for Gen Z. Take solo/group photos, join virtual rooms, share moments, and play mini-games.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

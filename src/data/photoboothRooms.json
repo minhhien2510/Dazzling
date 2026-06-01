@@ -1,0 +1,23 @@
+[
+  {
+    "id": "r1",
+    "name": "Neon Party Room",
+    "code": "NEON99",
+    "host": "dazzle_queen",
+    "members": [
+      { "id": "1", "name": "Alex", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" },
+      { "id": "2", "name": "Jordan", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan" }
+    ],
+    "status": "active"
+  },
+  {
+    "id": "r2",
+    "name": "Retro Vibes",
+    "code": "RETRO88",
+    "host": "pixel_pioneer",
+    "members": [
+      { "id": "2", "name": "Jordan", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan" }
+    ],
+    "status": "waiting"
+  }
+]

@@ -1,0 +1,21 @@
+:root {
+  --primary-lavender: #B8A8D8;
+  --secondary-rose: #D9A5B3;
+  --background-cream: #FAF7F2;
+  --surface-warm: #EDE3D7;
+  --text-dark: #2B2B2B;
+  --accent-sage: #A8C3B0;
+  --accent-blue: #AFC8E8;
+  --highlight-gold: #E6C27A;
+  
+  --primary-gradient: linear-gradient(135deg, var(--primary-lavender) 0%, var(--secondary-rose) 100%);
+  --studio-gradient: linear-gradient(135deg, var(--background-cream) 0%, #F3E8EE 100%);
+}
+
+.dark {
+  --background-cream: #2F2A2E;
+  --surface-warm: #3A343A;
+  --text-dark: #FAF7F2;
+  --primary-lavender: #9A89B8;
+  --secondary-rose: #B88998;
+}
