@@ -48,7 +48,7 @@ const Chat: React.FC = () => {
             <ChatWindow 
               friend={selectedFriend} 
               messages={messages} 
-              currentUserId={user?.id || '1'} 
+              currentUserId={user ? String(user.id) : '1'} 
             />
           ) : (
             <div className="h-100 glass-card d-flex align-items-center justify-content-center text-secondary">

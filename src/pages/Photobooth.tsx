@@ -1,81 +1,129 @@
-import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import React, { useState, useCallback, useRef } from 'react';
+import { Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-// Sub-components for Stages
-import SetupStage from '../components/photobooth/SetupStage';
-import CaptureStage from '../components/photobooth/CaptureStage';
-import MergeStage from '../components/photobooth/MergeStage';
-import ExportStage from '../components/photobooth/ExportStage';
-
-enum BoothStage {
-  SETUP = 'SETUP',
-  CAPTURE = 'CAPTURE',
-  MERGE = 'MERGE',
-  EXPORT = 'EXPORT'
-}
+import StepIndicator from '../components/photobooth/StepIndicator';
+import StudioScreen from '../components/photobooth/StudioScreen';
+import ResultPreview from '../components/photobooth/ResultPreview';
+import GuestModeBanner from '../components/GuestModeBanner';
+import { useAuth } from '../context/AuthContext';
+import { useSession } from '../context/SessionContext';
+import { useGallery } from '../context/GalleryContext';
+import { getApiErrorMessage } from '../services/apiClient';
+import { dataUrlToFile } from '../utils/image';
+import { composePhotostrip } from '../utils/photobooth/stripComposer';
+import { getFrameById } from '../utils/photobooth/frames';
+import type { BoothStage, PhotoboothConfig } from '../types/photobooth';
+import { PHOTOS_REQUIRED } from '../types/photobooth';
 
 const Photobooth: React.FC = () => {
-  const [stage, setStage] = useState<BoothStage>(BoothStage.SETUP);
-  const [config, setConfig] = useState({ layout: '1x4', timer: 3 });
+  const [stage, setStage] = useState<BoothStage>('STUDIO');
+  const [config, setConfig] = useState<PhotoboothConfig>({
+    layout: '1x4',
+    mode: 'manual',
+    interval: 3,
+  });
   const [photos, setPhotos] = useState<string[]>([]);
+  const [filterId, setFilterId] = useState('original');
+  const [frameId, setFrameId] = useState('classic');
   const [finalStrip, setFinalStrip] = useState<string | null>(null);
+
+  const sessionCreatedRef = useRef(false);
+
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { currentSession, createSession, clearCurrentSession } = useSession();
+  const { uploadImage, isUploading } = useGallery();
 
-  const handleStartSession = (sessionConfig: { layout: string, timer: number }) => {
-    setConfig(sessionConfig);
-    setStage(BoothStage.CAPTURE);
-  };
-
-  const handleCaptureComplete = (capturedPhotos: string[]) => {
-    setPhotos(capturedPhotos);
-    setStage(BoothStage.MERGE);
-  };
-
-  const handleMergeComplete = (generatedStrip: string) => {
-    setFinalStrip(generatedStrip);
-    setStage(BoothStage.EXPORT);
-  };
-
-  const resetSession = () => {
+  const resetAll = useCallback(() => {
     setPhotos([]);
     setFinalStrip(null);
-    setStage(BoothStage.SETUP);
+    setFilterId('original');
+    setFrameId('classic');
+    setConfig({ layout: '1x4', mode: 'manual', interval: 3 });
+    sessionCreatedRef.current = false;
+    clearCurrentSession();
+    setStage('STUDIO');
+  }, [clearCurrentSession]);
+
+  const handleSessionStart = useCallback(async () => {
+    if (sessionCreatedRef.current || !isAuthenticated) return;
+    const sessionName = `Session ${new Date().toLocaleString('vi-VN')}`;
+    await createSession(sessionName, config.layout);
+    sessionCreatedRef.current = true;
+    toast.success('Session đã sẵn sàng');
+  }, [isAuthenticated, createSession, config.layout]);
+
+  const handleGenerate = async () => {
+    if (photos.length !== PHOTOS_REQUIRED) {
+      toast.error(`Cần ${PHOTOS_REQUIRED} ảnh để tạo strip`);
+      return;
+    }
+    setStage('GENERATING');
+    try {
+      const frame = getFrameById(frameId);
+      const strip = await composePhotostrip(photos, config.layout, frame, filterId);
+      setFinalStrip(strip);
+      setStage('COMPLETED');
+    } catch (err) {
+      toast.error(getApiErrorMessage(err));
+      setStage('STUDIO');
+    }
+  };
+
+  const handleSaveImage = async (fileName: string) => {
+    if (!finalStrip) return;
+    const safeName = fileName.replace(/[^\w\s-]/g, '').trim() || 'dazzling-moment';
+    const file = dataUrlToFile(finalStrip, `${safeName}.png`);
+    await uploadImage(file, currentSession?.id);
+    toast.success('Đã lưu vào Gallery!');
   };
 
   return (
-    <Container className="py-5 min-vh-100">
-      {stage === BoothStage.SETUP && (
-        <SetupStage onStart={handleStartSession} />
-      )}
-      
-      {stage === BoothStage.CAPTURE && (
-        <CaptureStage 
-          config={config} 
-          onComplete={handleCaptureComplete} 
-          onCancel={resetSession} 
-        />
-      )}
-      
-      {stage === BoothStage.MERGE && (
-        <MergeStage 
-          photos={photos} 
-          config={config} 
-          onComplete={handleMergeComplete} 
-          onRetake={resetSession}
-        />
-      )}
-      
-      {stage === BoothStage.EXPORT && finalStrip && (
-        <ExportStage 
-          finalStrip={finalStrip} 
-          onRestart={resetSession} 
-          onGoHome={() => navigate('/')} 
-        />
-      )}
-    </Container>
+    <div className="photobooth-studio">
+      <div className="container-fluid" style={{ maxWidth: 1280 }}>
+        {!isAuthenticated && <GuestModeBanner />}
+
+        <StepIndicator currentStage={stage} />
+
+        {stage === 'STUDIO' && (
+          <StudioScreen
+            config={config}
+            filterId={filterId}
+            frameId={frameId}
+            onConfigChange={setConfig}
+            onFilterChange={setFilterId}
+            onFrameChange={setFrameId}
+            onPhotosChange={setPhotos}
+            onGenerate={handleGenerate}
+            onRestart={resetAll}
+            onSessionStart={isAuthenticated ? handleSessionStart : undefined}
+          />
+        )}
+
+        {stage === 'GENERATING' && (
+          <div className="text-center py-5">
+            <Spinner animation="border" variant="light" />
+            <p className="text-booth-muted mt-3 mb-0">Đang tạo photostrip...</p>
+          </div>
+        )}
+
+        {stage === 'COMPLETED' && finalStrip && (
+          <ResultPreview
+            photos={photos}
+            finalStrip={finalStrip}
+            isAuthenticated={isAuthenticated}
+            isUploading={isUploading}
+            onSaveImage={handleSaveImage}
+            onRestart={resetAll}
+            onGoHome={() => navigate('/')}
+            onViewGallery={() => navigate('/gallery')}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 
 export default Photobooth;
-

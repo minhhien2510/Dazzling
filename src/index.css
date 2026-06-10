@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
+@import "./styles/photobooth.css";
 
 @theme {
   --color-primary-lavender: var(--primary-lavender);
@@ -201,5 +202,87 @@ body {
 
 .chat-item {
   transition: all 0.2s ease;
+}
+
+@media (max-width: 991px) {
+  .navbar {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  .navbar-collapse {
+    margin-top: 0.75rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: rgba(250, 247, 242, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .navbar-collapse {
+    background: rgba(47, 42, 46, 0.95);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar .nav-link {
+    padding: 0.75rem 0.25rem !important;
+  }
+
+  .navbar-collapse > .d-flex {
+    justify-content: space-between;
+    gap: 1rem !important;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .navbar-collapse > .d-flex {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 575px) {
+  .navbar-brand {
+    font-size: 1.35rem !important;
+  }
+
+  main {
+    padding-top: 72px !important;
+  }
+
+  .container,
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .glass-card {
+    border-radius: 1rem;
+  }
+
+  .btn-dazzle {
+    padding: 0.7rem 1.1rem;
+    border-radius: 14px;
+  }
+
+  .display-2 {
+    font-size: 2.5rem;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  .modal-dialog {
+    margin: 0.75rem;
+  }
+
+  .modal-content {
+    border-radius: 1rem;
+  }
 }
 

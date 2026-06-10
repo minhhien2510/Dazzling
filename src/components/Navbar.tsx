@@ -4,6 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Camera, Store, Users, LogIn, User, Sun, Moon, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { getAvatarUrl } from '../services/authService';
 
 const Navigation: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -24,6 +25,11 @@ const Navigation: React.FC = () => {
             <Nav.Link as={NavLink as any} to="/moments" className="px-3 small uppercase tracking-wide">
               Moments
             </Nav.Link>
+            {isAuthenticated && (
+              <Nav.Link as={NavLink as any} to="/gallery" className="px-3 small uppercase tracking-wide">
+                Gallery
+              </Nav.Link>
+            )}
             <Nav.Link as={NavLink as any} to="/stores" className="px-3 small uppercase tracking-wide">
               Stores
             </Nav.Link>
@@ -52,20 +58,20 @@ const Navigation: React.FC = () => {
             
             {isAuthenticated ? (
               <div className="d-flex align-items-center gap-3">
-                <Nav.Link as={Link as any} to="/dashboard" className="p-0">
+                <Nav.Link as={Link as any} to="/profile" className="p-0">
                   <img 
-                    src={user?.avatar} 
+                    src={user ? getAvatarUrl(user) : ''} 
                     alt="avatar" 
                     width="38" 
                     height="38" 
                     className="rounded-circle border-2 border-primary-lavender bg-white" 
                   />
                 </Nav.Link>
-                <Button variant="link" size="sm" onClick={logout} className="text-secondary-muted text-decoration-none small fw-bold">Logout</Button>
+                <Button variant="link" size="sm" onClick={() => logout()} className="text-secondary-muted text-decoration-none small fw-bold">Đăng xuất</Button>
               </div>
             ) : (
               <Button as={Link as any} to="/login" className="btn-dazzle px-4 py-2">
-                <LogIn size={18} className="me-2" /> Login
+                <LogIn size={18} className="me-2" /> Đăng nhập
               </Button>
             )}
           </div>

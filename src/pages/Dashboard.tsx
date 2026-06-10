@@ -4,10 +4,15 @@ import { motion } from 'motion/react';
 import { Image, Heart, Settings, Grid, History } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import { getAvatarUrl } from '../services/authService';
 
 const Dashboard: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isInitializing } = useAuth();
   const [activeTab, setActiveTab] = useState('memories');
+
+  if (isInitializing) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
@@ -22,14 +27,17 @@ const Dashboard: React.FC = () => {
             <Card className="glass-card text-center p-4 bg-white bg-opacity-70 border-0 shadow-sm">
               <div className="mb-4">
                 <img 
-                  src={user?.avatar} 
+                  src={user ? getAvatarUrl(user) : ''} 
                   alt="Avatar" 
                   className="rounded-circle border-4 border-primary-lavender bg-white p-1 mb-3 shadow-md" 
                   width="120" 
                   height="120" 
                 />
-                <h3 className="fw-bold mb-0 text-dark">{user?.name}</h3>
-                <p className="text-secondary-muted small">@{user?.username}</p>
+                <h3 className="fw-bold mb-0 text-dark">{user?.fullName}</h3>
+                <p className="text-secondary-muted small">{user?.email}</p>
+                {user?.role === 'ADMIN' && (
+                  <span className="badge bg-primary-lavender mt-2">ADMIN</span>
+                )}
               </div>
               <div className="d-flex justify-content-around mb-4">
                 <div>
