@@ -293,13 +293,14 @@
   max-width: 100%;
   margin-inline: auto;
   padding: clamp(0.75rem, 2vw, 1.25rem);
+  overflow: hidden;
 }
 
 .photobooth-studio .result-strip-image {
   display: block;
-  width: min(100%, 360px);
-  height: auto;
-  max-height: none;
+  width: auto;
+  max-width: min(100%, 420px);
+  max-height: min(78vh, 980px);
   object-fit: contain;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
@@ -340,7 +341,8 @@
   }
 
   .photobooth-studio .result-strip-image {
-    width: min(100%, 340px);
+    max-width: min(100%, 360px);
+    max-height: 72vh;
   }
 }
 
@@ -440,9 +442,11 @@
   .photobooth-studio .result-strip-frame {
     width: 100%;
     padding: 0.75rem;
+    align-items: flex-start;
   }
 
   .photobooth-studio .result-strip-image {
-    width: min(100%, 300px);
+    max-width: min(100%, 280px);
+    max-height: 66vh;
   }
 }

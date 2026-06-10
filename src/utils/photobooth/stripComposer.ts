@@ -10,6 +10,33 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+function drawImageCover(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+) {
+  const sourceRatio = img.width / img.height;
+  const targetRatio = width / height;
+
+  let sourceWidth = img.width;
+  let sourceHeight = img.height;
+  let sourceX = 0;
+  let sourceY = 0;
+
+  if (sourceRatio > targetRatio) {
+    sourceWidth = img.height * targetRatio;
+    sourceX = (img.width - sourceWidth) / 2;
+  } else {
+    sourceHeight = img.width / targetRatio;
+    sourceY = (img.height - sourceHeight) / 2;
+  }
+
+  ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
+}
+
 export async function composePhotostrip(
   photos: string[],
   layout: LayoutType,
@@ -17,8 +44,8 @@ export async function composePhotostrip(
   filterId: string,
 ): Promise<string> {
   const filter = getFilterById(filterId);
-  const imageWidth = 720;
-  const imageHeight = 540;
+  const imageWidth = layout === '1x4' ? 640 : 620;
+  const imageHeight = layout === '1x4' ? 720 : 620;
   const padding = 32;
   const margin = 76;
 
@@ -55,7 +82,7 @@ export async function composePhotostrip(
       y = padding + Math.floor(i / 2) * (imageHeight + padding);
     }
     ctx.filter = filter.cssFilter;
-    ctx.drawImage(img, x, y, imageWidth, imageHeight);
+    drawImageCover(ctx, img, x, y, imageWidth, imageHeight);
   });
 
   ctx.filter = 'none';
