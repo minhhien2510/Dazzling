@@ -72,12 +72,12 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
           <p className="text-booth-muted small mb-0">Download, save, or start a new session.</p>
         </div>
 
-        <div className="row g-4 align-items-start">
-          <div className="col-lg-5">
+        <div className="row g-4 align-items-start result-preview-layout">
+          <div className="col-lg-3">
             <p className="booth-section-title">Original Photos</p>
-            <div className="row g-2">
+            <div className="row g-2 result-original-grid">
               {photos.map((p, i) => (
-                <div key={i} className="col-6">
+                <div key={i} className="col-6 col-lg-12">
                   <div className="booth-photo-slot filled">
                     <img src={p} alt={`Original ${i + 1}`} />
                   </div>
@@ -86,10 +86,10 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
             </div>
           </div>
 
-          <div className="col-lg-7">
+          <div className="col-lg-9">
             <p className="booth-section-title">Generated Strip</p>
-            <div className="booth-glass p-3 text-center mb-4">
-              <img src={finalStrip} alt="Photostrip result" className="img-fluid rounded-3" style={{ maxHeight: 520 }} />
+            <div className="booth-glass result-strip-frame text-center mb-4">
+              <img src={finalStrip} alt="Photostrip result" className="result-strip-image rounded-3" />
             </div>
 
             {!isAuthenticated && (

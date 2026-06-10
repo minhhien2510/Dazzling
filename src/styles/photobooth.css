@@ -103,6 +103,71 @@
   box-shadow: var(--booth-glow);
 }
 
+.photobooth-studio .booth-camera-frame {
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 50px rgba(184, 168, 216, 0.14);
+}
+
+.photobooth-studio .booth-camera-screen {
+  aspect-ratio: 16 / 9;
+  min-height: clamp(280px, 48vw, 480px);
+  border-radius: 1rem;
+  isolation: isolate;
+}
+
+.photobooth-studio .booth-camera-screen video {
+  transform: translateZ(0);
+  image-rendering: auto;
+  backface-visibility: hidden;
+}
+
+.photobooth-studio .booth-camera-beauty-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 48% 20%, rgba(255, 255, 255, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%),
+    radial-gradient(circle at center, transparent 58%, rgba(0, 0, 0, 0.18) 100%);
+  mix-blend-mode: soft-light;
+}
+
+.photobooth-studio .booth-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 150px;
+  min-height: 54px;
+  padding: 0.55rem 0.75rem;
+  color: var(--booth-text);
+  background: var(--booth-surface);
+  border: 1px solid var(--booth-border);
+  border-radius: 1rem;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.photobooth-studio .booth-filter-chip:hover {
+  background: var(--booth-surface-hover);
+  transform: translateY(-1px);
+}
+
+.photobooth-studio .booth-filter-chip.selected {
+  border-color: #b8a8d8;
+  box-shadow: 0 8px 28px rgba(184, 168, 216, 0.2);
+}
+
+.photobooth-studio .booth-filter-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.25);
+}
+
 .photobooth-studio .booth-step-indicator {
   display: flex;
   gap: 0.5rem;
@@ -220,6 +285,29 @@
   border-bottom: none;
 }
 
+.photobooth-studio .result-strip-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.photobooth-studio .result-strip-image {
+  display: block;
+  width: min(100%, 360px);
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.photobooth-studio .result-original-grid .booth-photo-slot {
+  max-height: 150px;
+}
+
 @media (max-width: 991px) {
   .photobooth-studio {
     padding: 1.5rem 0.75rem 2rem;
@@ -241,6 +329,18 @@
   .photobooth-studio .booth-action-bar > button {
     width: 100%;
     justify-content: center;
+  }
+
+  .photobooth-studio .result-preview-layout {
+    flex-direction: column-reverse;
+  }
+
+  .photobooth-studio .result-original-grid .booth-photo-slot {
+    max-height: none;
+  }
+
+  .photobooth-studio .result-strip-image {
+    width: min(100%, 340px);
   }
 }
 
@@ -267,6 +367,18 @@
 
   .photobooth-studio .booth-glass {
     border-radius: 0.9rem;
+  }
+
+  .photobooth-studio .booth-camera-frame {
+    border-radius: 1.1rem !important;
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+
+  .photobooth-studio .booth-camera-screen {
+    aspect-ratio: 3 / 4;
+    min-height: min(62vh, 560px);
+    border-radius: 0.95rem;
   }
 
   .photobooth-studio .booth-option-card {
@@ -319,5 +431,18 @@
     flex: 0 0 auto;
     scroll-snap-align: start;
     white-space: nowrap;
+  }
+
+  .photobooth-studio .booth-filter-chip {
+    min-width: 170px;
+  }
+
+  .photobooth-studio .result-strip-frame {
+    width: 100%;
+    padding: 0.75rem;
+  }
+
+  .photobooth-studio .result-strip-image {
+    width: min(100%, 300px);
   }
 }

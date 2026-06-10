@@ -17,10 +17,10 @@ export async function composePhotostrip(
   filterId: string,
 ): Promise<string> {
   const filter = getFilterById(filterId);
-  const imageWidth = 400;
-  const imageHeight = 300;
-  const padding = 20;
-  const margin = 48;
+  const imageWidth = 720;
+  const imageHeight = 540;
+  const padding = 32;
+  const margin = 76;
 
   let canvasWidth: number;
   let canvasHeight: number;
@@ -60,13 +60,13 @@ export async function composePhotostrip(
 
   ctx.filter = 'none';
   ctx.fillStyle = frame.textColor;
-  ctx.font = 'bold 22px Inter, system-ui, sans-serif';
+  ctx.font = 'bold 34px Inter, system-ui, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('DAZZLING', canvasWidth / 2, canvasHeight - 28);
+  ctx.fillText('DAZZLING', canvasWidth / 2, canvasHeight - 42);
 
-  ctx.font = '12px Inter, system-ui, sans-serif';
+  ctx.font = '18px Inter, system-ui, sans-serif';
   ctx.globalAlpha = 0.65;
-  ctx.fillText(new Date().toLocaleDateString('vi-VN'), canvasWidth / 2, canvasHeight - 12);
+  ctx.fillText(new Date().toLocaleDateString('vi-VN'), canvasWidth / 2, canvasHeight - 18);
   ctx.globalAlpha = 1;
 
   return canvas.toDataURL('image/png');

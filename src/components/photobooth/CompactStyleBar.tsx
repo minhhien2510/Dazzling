@@ -15,12 +15,12 @@ export const CompactFilterBar: React.FC<{
 }> = ({ selectedId, onChange }) => (
   <div>
     <p className="booth-section-title">Filter</p>
-    <div className="d-flex flex-wrap gap-2">
+    <div className="booth-filter-chip-row d-flex flex-wrap gap-2">
       {FILTERS.map((f) => (
         <button
           key={f.id}
           type="button"
-          className={`booth-btn-secondary py-1 px-3 small ${selectedId === f.id ? 'selected' : ''}`}
+          className={`booth-filter-chip ${selectedId === f.id ? 'selected' : ''}`}
           style={
             selectedId === f.id
               ? { borderColor: '#b8a8d8', background: 'rgba(184,168,216,0.2)' }
@@ -29,7 +29,11 @@ export const CompactFilterBar: React.FC<{
           onClick={() => onChange(f.id)}
           aria-pressed={selectedId === f.id}
         >
-          {f.name}
+          <span className="booth-filter-swatch" style={{ background: f.accent }} />
+          <span className="text-start">
+            <span className="d-block fw-semibold">{f.name}</span>
+            {f.description && <span className="d-block text-booth-muted">{f.description}</span>}
+          </span>
         </button>
       ))}
     </div>

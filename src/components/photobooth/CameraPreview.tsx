@@ -12,24 +12,33 @@ interface CameraPreviewProps {
 const CameraPreview = forwardRef<Webcam, CameraPreviewProps>(
   ({ countdown, flash, cssFilter = 'none', frameColor }, ref) => (
     <div
-      className="rounded-4 overflow-hidden"
+      className="booth-camera-frame rounded-4 overflow-hidden"
       style={{
         background: frameColor ?? '#000',
-        padding: frameColor ? 10 : 0,
+        padding: frameColor ? 8 : 0,
       }}
     >
       <div
-        className="booth-glass overflow-hidden position-relative"
-        style={{ minHeight: 'clamp(220px, 56vw, 360px)', aspectRatio: '16/10', background: '#000' }}
+        className="booth-camera-screen booth-glass overflow-hidden position-relative"
+        style={{ background: '#000' }}
       >
         <Webcam
           ref={ref}
           audio={false}
+          mirrored
           screenshotFormat="image/jpeg"
-          videoConstraints={{ width: 1280, height: 720, facingMode: 'user' }}
+          screenshotQuality={0.98}
+          videoConstraints={{
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            aspectRatio: { ideal: 16 / 9 },
+            frameRate: { ideal: 30, max: 60 },
+            facingMode: 'user',
+          }}
           className="w-100 h-100"
           style={{ objectFit: 'cover', filter: cssFilter }}
         />
+        <div className="booth-camera-beauty-overlay" aria-hidden="true" />
 
         <AnimatePresence>
           {countdown !== null && countdown > 0 && (
