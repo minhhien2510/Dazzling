@@ -2,6 +2,13 @@ import type { FilterOption } from '../../types/photobooth';
 
 export const FILTERS: FilterOption[] = [
   {
+    id: 'flagship',
+    name: 'Flagship Portrait',
+    description: 'Nét mặt, tóc, mắt rõ',
+    accent: 'linear-gradient(135deg, #f7fbff, #c7d8ff)',
+    cssFilter: 'brightness(1.06) contrast(1.12) saturate(1.04)',
+  },
+  {
     id: 'natural',
     name: 'Natural HD',
     description: 'Sáng rõ, da tự nhiên',

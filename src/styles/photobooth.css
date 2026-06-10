@@ -129,10 +129,11 @@
   pointer-events: none;
   z-index: 2;
   background:
-    radial-gradient(circle at 48% 20%, rgba(255, 255, 255, 0.18), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%),
-    radial-gradient(circle at center, transparent 58%, rgba(0, 0, 0, 0.18) 100%);
-  mix-blend-mode: soft-light;
+    radial-gradient(circle at 48% 18%, rgba(255, 255, 255, 0.1), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 38%),
+    radial-gradient(circle at center, transparent 62%, rgba(0, 0, 0, 0.16) 100%);
+  mix-blend-mode: overlay;
+  opacity: 0.78;
 }
 
 .photobooth-studio .booth-filter-chip {

@@ -7,6 +7,7 @@ import type { PhotoboothConfig } from '../../types/photobooth';
 import { PHOTOS_REQUIRED } from '../../types/photobooth';
 import { getFilterById } from '../../utils/photobooth/filters';
 import { getFrameById } from '../../utils/photobooth/frames';
+import { enhancePortraitDataUrl } from '../../utils/photobooth/portraitEnhancer';
 import CameraPreview from './CameraPreview';
 import CaptureProgress from './CaptureProgress';
 import CapturedPhotosPanel from './CapturedPhotosPanel';
@@ -91,11 +92,18 @@ const StudioScreen: React.FC<StudioScreenProps> = ({
     setFlash(true);
     setTimeout(() => setFlash(false), 200);
 
+    let finalImageSrc = imageSrc;
+    try {
+      finalImageSrc = await enhancePortraitDataUrl(imageSrc);
+    } catch {
+      finalImageSrc = imageSrc;
+    }
+
     setSlots((prev) => {
       const next = [...prev];
       const emptyIdx = next.findIndex((p) => !p);
       if (emptyIdx === -1) return prev;
-      next[emptyIdx] = imageSrc;
+      next[emptyIdx] = finalImageSrc;
       onPhotosChange(next.filter((p): p is string => !!p));
       return next;
     });

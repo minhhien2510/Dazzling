@@ -25,7 +25,7 @@ const Photobooth: React.FC = () => {
     interval: 3,
   });
   const [photos, setPhotos] = useState<string[]>([]);
-  const [filterId, setFilterId] = useState('original');
+  const [filterId, setFilterId] = useState('flagship');
   const [frameId, setFrameId] = useState('classic');
   const [finalStrip, setFinalStrip] = useState<string | null>(null);
 
@@ -39,7 +39,7 @@ const Photobooth: React.FC = () => {
   const resetAll = useCallback(() => {
     setPhotos([]);
     setFinalStrip(null);
-    setFilterId('original');
+    setFilterId('flagship');
     setFrameId('classic');
     setConfig({ layout: '1x4', mode: 'manual', interval: 3 });
     sessionCreatedRef.current = false;
