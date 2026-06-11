@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
 import { useGallery } from '../context/GalleryContext';
 import { getApiErrorMessage } from '../services/apiClient';
-import { dataUrlToFile } from '../utils/image';
+import { compressDataUrlToFile } from '../utils/image';
 import { composePhotostrip } from '../utils/photobooth/stripComposer';
 import { getFrameById } from '../utils/photobooth/frames';
 import type { BoothStage, PhotoboothConfig } from '../types/photobooth';
@@ -75,7 +75,15 @@ const Photobooth: React.FC = () => {
   const handleSaveImage = async (fileName: string) => {
     if (!finalStrip) return;
     const safeName = fileName.replace(/[^\w\s-]/g, '').trim() || 'dazzling-moment';
-    const file = dataUrlToFile(finalStrip, `${safeName}.png`);
+    const targetMaxBytes = Number(import.meta.env.VITE_MAX_UPLOAD_BYTES || 1_800_000);
+    const file = await compressDataUrlToFile(finalStrip, `${safeName}.jpg`, {
+      maxWidth: 1800,
+      maxHeight: 3600,
+      quality: 0.92,
+      minQuality: 0.78,
+      targetMaxBytes,
+      mimeType: 'image/jpeg',
+    });
     await uploadImage(file, currentSession?.id);
     toast.success('Đã lưu vào Gallery!');
   };

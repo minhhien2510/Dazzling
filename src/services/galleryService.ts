@@ -11,9 +11,7 @@ export const galleryService = {
       formData.append('sessionId', String(sessionId));
     }
     return apiClient
-      .post<GalleryUploadDto>('/api/gallery/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      .post<GalleryUploadDto>('/api/gallery/upload', formData)
       .then((r) => mapGalleryUpload(r.data));
   },
 
