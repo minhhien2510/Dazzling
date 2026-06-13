@@ -26,6 +26,7 @@ interface StudioScreenProps {
   onGenerate: () => void;
   onRestart: () => void;
   onSessionStart?: () => Promise<void>;
+  onPhotoCaptured?: (capturedCount: number) => void;
   initialPhotos?: string[];
 }
 
@@ -42,6 +43,7 @@ const StudioScreen: React.FC<StudioScreenProps> = ({
   onGenerate,
   onRestart,
   onSessionStart,
+  onPhotoCaptured,
   initialPhotos,
 }) => {
   const [slots, setSlots] = useState<(string | null)[]>(() => {
@@ -104,10 +106,11 @@ const StudioScreen: React.FC<StudioScreenProps> = ({
       const emptyIdx = next.findIndex((p) => !p);
       if (emptyIdx === -1) return prev;
       next[emptyIdx] = finalImageSrc;
+      onPhotoCaptured?.(next.filter(Boolean).length);
       onPhotosChange(next.filter((p): p is string => !!p));
       return next;
     });
-  }, [ensureSession, onPhotosChange]);
+  }, [ensureSession, onPhotoCaptured, onPhotosChange]);
 
   const startCountdown = useCallback(() => {
     if (paused || isFull) return;

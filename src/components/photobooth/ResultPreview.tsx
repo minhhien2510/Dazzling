@@ -13,6 +13,7 @@ interface ResultPreviewProps {
   onRestart: () => void;
   onGoHome: () => void;
   onViewGallery: () => void;
+  onDownload?: () => void;
 }
 
 const ResultPreview: React.FC<ResultPreviewProps> = ({
@@ -24,6 +25,7 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
   onRestart,
   onGoHome,
   onViewGallery,
+  onDownload,
 }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
@@ -34,6 +36,7 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
     link.download = `dazzling-moment-${Date.now()}.png`;
     link.href = finalStrip;
     link.click();
+    onDownload?.();
   };
 
   const handleShare = async () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Nav, Container, Button, Badge } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
-import { Camera, Store, Users, LogIn, User, Sun, Moon, MessageCircle } from 'lucide-react';
+import { LogIn, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { getAvatarUrl } from '../services/authService';
@@ -28,6 +28,16 @@ const Navigation: React.FC = () => {
             {isAuthenticated && (
               <Nav.Link as={NavLink as any} to="/gallery" className="px-3 small uppercase tracking-wide">
                 Gallery
+              </Nav.Link>
+            )}
+            {isAuthenticated && (
+              <Nav.Link as={NavLink as any} to="/feedback" className="px-3 small uppercase tracking-wide">
+                Feedback
+              </Nav.Link>
+            )}
+            {user?.role === 'ADMIN' && (
+              <Nav.Link as={NavLink as any} to="/admin/analytics" className="px-3 small uppercase tracking-wide">
+                Admin
               </Nav.Link>
             )}
             <Nav.Link as={NavLink as any} to="/stores" className="px-3 small uppercase tracking-wide">

@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col, Button, Badge, Card } from 'react-bootstrap';
 import { motion } from 'motion/react';
 import { Camera, Sparkles, Zap, Heart, MessageCircle, Star, Users as UsersIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { IMAGES } from '../constants/images';
+import { analyticsService } from '../services/analyticsService';
 
 const Home: React.FC = () => {
+  useEffect(() => {
+    analyticsService.track({ eventType: 'VISIT_HOME' });
+  }, []);
+
   return (
     <div className="home-page">
       {/* Hero Section */}

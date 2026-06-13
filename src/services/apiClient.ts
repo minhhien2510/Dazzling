@@ -53,6 +53,14 @@ apiClient.interceptors.response.use(
   async (error: AxiosError<ApiErrorBody>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
+    if (error.response?.status === 403) {
+      clearStoredTokens();
+      if (window.location.pathname !== '/') {
+        window.location.href = '/';
+      }
+      return Promise.reject(toApiError(error));
+    }
+
     if (!originalRequest || error.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(toApiError(error));
     }

@@ -30,7 +30,7 @@ const Chat: React.FC = () => {
     }
   }, [selectedFriend]);
 
-  if (!isAuthenticated) return <Navigate to="/login" />;
+  if (!isAuthenticated) return <Navigate to="/" replace />;
   if (loading) return <LoadingSpinner />;
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -11,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSession } from '../context/SessionContext';
 import { useGallery } from '../context/GalleryContext';
 import { getApiErrorMessage } from '../services/apiClient';
+import { analyticsService } from '../services/analyticsService';
 import { compressDataUrlToFile } from '../utils/image';
 import { composePhotostrip } from '../utils/photobooth/stripComposer';
 import { getFrameById } from '../utils/photobooth/frames';
@@ -35,6 +36,10 @@ const Photobooth: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { currentSession, createSession, clearCurrentSession } = useSession();
   const { uploadImage, isUploading } = useGallery();
+
+  useEffect(() => {
+    analyticsService.track({ eventType: 'OPEN_CAMERA' });
+  }, []);
 
   const resetAll = useCallback(() => {
     setPhotos([]);
@@ -66,11 +71,38 @@ const Photobooth: React.FC = () => {
       const strip = await composePhotostrip(photos, config.layout, frame, filterId);
       setFinalStrip(strip);
       setStage('COMPLETED');
+      analyticsService.track({
+        eventType: 'COMPLETE_SESSION',
+        metadata: { sessionId: currentSession?.id, layoutType: config.layout },
+      });
     } catch (err) {
       toast.error(getApiErrorMessage(err));
       setStage('STUDIO');
     }
   };
+
+  const handleFrameChange = useCallback((id: string) => {
+    setFrameId(id);
+    const frame = getFrameById(id);
+    analyticsService.track({
+      eventType: 'USE_FRAME',
+      metadata: { frameId: id, frameName: frame.name },
+    });
+  }, []);
+
+  const handlePhotoCaptured = useCallback((capturedCount: number) => {
+    analyticsService.track({
+      eventType: 'TAKE_PHOTO',
+      metadata: { capturedCount, layoutType: config.layout },
+    });
+  }, [config.layout]);
+
+  const handleDownload = useCallback(() => {
+    analyticsService.track({
+      eventType: 'DOWNLOAD_PHOTO',
+      metadata: { sessionId: currentSession?.id, layoutType: config.layout, frameId },
+    });
+  }, [config.layout, currentSession?.id, frameId]);
 
   const handleSaveImage = async (fileName: string) => {
     if (!finalStrip) return;
@@ -102,11 +134,12 @@ const Photobooth: React.FC = () => {
             frameId={frameId}
             onConfigChange={setConfig}
             onFilterChange={setFilterId}
-            onFrameChange={setFrameId}
+            onFrameChange={handleFrameChange}
             onPhotosChange={setPhotos}
             onGenerate={handleGenerate}
             onRestart={resetAll}
             onSessionStart={isAuthenticated ? handleSessionStart : undefined}
+            onPhotoCaptured={handlePhotoCaptured}
           />
         )}
 
@@ -127,6 +160,7 @@ const Photobooth: React.FC = () => {
             onRestart={resetAll}
             onGoHome={() => navigate('/')}
             onViewGallery={() => navigate('/gallery')}
+            onDownload={handleDownload}
           />
         )}
       </div>

@@ -17,19 +17,19 @@ export const AppRouter = () => {
       
       <Route
         path="/dashboard"
-        element={user ? <Dashboard /> : <Navigate to="/login" />}
+        element={user ? <Dashboard /> : <Navigate to="/" replace />}
       />
       <Route
         path="/memories"
-        element={user ? <MemoriesPage /> : <Navigate to="/login" />}
+        element={user ? <MemoriesPage /> : <Navigate to="/" replace />}
       />
       <Route
         path="/room/:id"
-        element={user ? <PhotoboothRoom /> : <Navigate to="/login" />}
+        element={<PhotoboothRoom />}
       />
       <Route
         path="/stores"
-        element={user ? <StoreFinder /> : <Navigate to="/login" />}
+        element={user ? <StoreFinder /> : <Navigate to="/" replace />}
       />
     </Routes>
   );

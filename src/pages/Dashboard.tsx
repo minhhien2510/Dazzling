@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" replace />;
   }
 
   return (

@@ -13,6 +13,8 @@ export interface PhotoboothConfig {
 export interface FilterOption {
   id: string;
   name: string;
+  description?: string;
+  accent?: string;
   cssFilter: string;
 }
 
